@@ -130,7 +130,7 @@ setup_empty() -> make_app(fixture_dir(~"empty_app")).
 cleanup(_) ->
     Modules = cover:imported_modules(),
     true = is_list(Modules),
-    [cover:reset(M) || M <:- Modules],
+    [cover:reset(M) || M <- Modules],
     ok.
 
 %--- Helpers -------------------------------------------------------------------

@@ -15,8 +15,8 @@ format_lines(#{regions := Regions, opts := #{format := human} = Opts} = S) ->
 format_raw(Regions, #{counts := ShowCounts}) ->
     lists:join("\n", [
         format_raw_line(File, L, ShowCounts)
-     || #{file := File, lines := Lines} <:- Regions,
-        L <:- Lines
+     || #{file := File, lines := Lines} <- Regions,
+        L <- Lines
     ]).
 
 format_raw_line(File, {N, Source, Status, Count}, ShowCounts) ->
@@ -41,7 +41,7 @@ format_human(Regions, Opts) ->
     Groups = group_by_file(Regions),
     lists:join("\n\n", [
         format_file_group(File, Rs, Opts, Widths)
-     || {File, Rs} <:- Groups
+     || {File, Rs} <- Groups
     ]).
 
 format_file_group(
@@ -52,8 +52,8 @@ format_file_group(
 ) ->
     CW = count_col_width(ShowCounts, Widths),
     Blocks = [
-        [format_line(L, Opts, Widths) || L <:- Lines]
-     || #{lines := Lines} <:- Regions
+        [format_line(L, Opts, Widths) || L <- Lines]
+     || #{lines := Lines} <- Regions
     ],
     Body = lists:join(collapse_line(LW, CW, C), Blocks),
     [
@@ -154,7 +154,7 @@ format_wrapped([First | Rest], Prefix, Cont, uncovered, Gutter, Cols, true) ->
     [
         bg_line(Prefix, First, FW),
         "\n"
-        | [[bg_line(Cont, C, FW), "\n"] || C <:- Rest]
+        | [[bg_line(Cont, C, FW), "\n"] || C <- Rest]
     ];
 format_wrapped([First | Rest], Prefix, Cont, _Status, _Gutter, _Cols, C) ->
     [
@@ -162,7 +162,7 @@ format_wrapped([First | Rest], Prefix, Cont, _Status, _Gutter, _Cols, C) ->
         " ",
         fg(First, context, C),
         "\n"
-        | [[Cont, " ", fg(L, context, C), "\n"] || L <:- Rest]
+        | [[Cont, " ", fg(L, context, C), "\n"] || L <- Rest]
     ].
 
 bg_line(Prefix, Chunk, FillWidth) ->

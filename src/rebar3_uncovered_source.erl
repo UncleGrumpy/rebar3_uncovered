@@ -54,13 +54,13 @@ add_source([Src | Rest], N, Acc) ->
 build_file_regions(File, FileLines, all) ->
     build_file_regions(File, FileLines, maps:size(FileLines));
 build_file_regions(File, FileLines, Context) ->
-    Anchors = [N || N := Val <:- FileLines, is_anchor(Val)],
+    Anchors = [N || N := Val <- FileLines, is_anchor(Val)],
     Sorted = lists:usort(Anchors),
     Groups = group_consecutive(Sorted, Context),
     FileLength = maps:size(FileLines),
     [
         build_region(File, Group, FileLength, Context, FileLines)
-     || Group <:- Groups
+     || Group <- Groups
     ].
 
 is_anchor(#{show := true}) -> true;

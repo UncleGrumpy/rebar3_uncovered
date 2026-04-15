@@ -57,7 +57,7 @@ parse_lines(["+++ b/" ++ Path | Rest], _File, Acc) ->
     parse_lines(Rest, Path, Acc);
 parse_lines(["@@ " ++ _ = Line | Rest], File, Acc) when File =/= undefined ->
     FileLines = maps:get(File, Acc, #{}),
-    NewLines = #{N => #{} || N <:- parse_hunk(Line)},
+    NewLines = #{N => #{} || N <- parse_hunk(Line)},
     parse_lines(Rest, File, Acc#{File => maps:merge(FileLines, NewLines)});
 parse_lines([_ | Rest], File, Acc) ->
     parse_lines(Rest, File, Acc).

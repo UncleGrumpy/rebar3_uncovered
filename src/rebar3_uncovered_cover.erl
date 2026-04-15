@@ -50,14 +50,14 @@ module_lines(Mod, SourceDirs, Cwd) ->
 
 analyse(Mod) ->
     {ok, [_ | _] = Analysis} = cover:analyse(Mod, coverage, line),
-    #{Line => line_info(Cov) || {{_, Line}, {Cov, _}} <:- Analysis}.
+    #{Line => line_info(Cov) || {{_, Line}, {Cov, _}} <- Analysis}.
 
 line_info(0) -> #{count => 0, show => true};
 line_info(C) -> #{count => C}.
 
 source_dirs(Apps) ->
     % elp:ignore W0017
-    [filename:join(rebar_app_info:dir(App), "src") || App <:- Apps].
+    [filename:join(rebar_app_info:dir(App), "src") || App <- Apps].
 
 silence_cover(Fun) ->
     Pid = cover_pid(cover:start()),
@@ -93,8 +93,8 @@ find_source(Mod, SourceDirs) ->
     Filename = atom_to_list(Mod) ++ ".erl",
     Paths = [
         Path
-     || Dir <:- SourceDirs,
-        Path <:- [filename:join(Dir, Filename)],
+     || Dir <- SourceDirs,
+        Path <- [filename:join(Dir, Filename)],
         filelib:is_file(Path)
     ],
     find_source_result(Paths).
